@@ -1,0 +1,28 @@
+{
+  "name": "grammalab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GrammaLab — Laboratorio interactivo de lenguajes formales y autómatas (UNAH ISC 312)",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "npm --workspace=@grammalab/api run db:migrate",
+    "db:seed": "npm --workspace=@grammalab/api run db:seed",
+    "dev:api": "npm --workspace=@grammalab/api run dev",
+    "dev:web": "npm --workspace=@grammalab/web run dev",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev:api\" \"npm run dev:web\"",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

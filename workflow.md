@@ -19,12 +19,12 @@ Sigue estos **7 pasos en orden** cada vez que un integrante pida construir, modi
    - Si todas las dependencias están en `[x]`: procede normalmente.
    - Si alguna dependencia sigue en `[ ]` o `[/]`: **infórmalo de inmediato** y ofrece dos opciones claras:
      - **Opción A (Recomendada):** Trabajar usando los contratos exactos de `contexto-general.md` con datos *mock*/stubs temporales claramente marcados con `// TODO(integracion): ...` sin tocar los archivos de la subfase pendiente.
-     - **Opción B:** Esperar a que la subfase previa se fusione en `main`.
+     - **Opción B:** Esperar a que la subfase previa se fusione en `desarrollo`.
 3. Si la solicitud pide tocar archivos propiedad de otro integrante, adviértelo antes de editar.
 
-### Paso 3 — Verificar Rama Git y Modo de Base de Datos
-1. Revisa el estado del repositorio (`git status` y rama actual).
-   - Si el usuario está en `main` y va a implementar código, recomienda o crea la rama `feat/<subfase>-<resumen>` (ej. `feat/1.2-parser-gramaticas`).
+### Paso 3 — Verificar Rama Git, Sincronización y Modo de Base de Datos
+1. Revisa el estado del repositorio (`git status`, rama actual y `git fetch origin`).
+   - **Asistencia activa en Git al iniciar:** Todas las ramas de trabajo nacen desde `desarrollo`. Si el integrante está en `desarrollo` o `main` y va a implementar código, actualiza `desarrollo` (`git pull origin desarrollo` si está limpio) y **crea/cambia directamente a la rama** `feat/<subfase>-<resumen>` (ej. `feat/1.2-parser-gramaticas`). Si ya había cambios sin guardar en `desarrollo` o `main`, ayúdalo a trasladarlos a la rama nueva sin perder trabajo.
 2. Si la tarea interactúa con PostgreSQL 17:
    - Comprueba si `apps/api/.env` ya existe y usa su `DATABASE_URL`.
    - Respeta el modo elegido por el integrante: **no levantes Docker automáticamente** si el integrante trabaja con PostgreSQL 17 local, y **nunca ejecutes `apps/web` ni `apps/api` dentro de Docker**.
@@ -54,16 +54,24 @@ Antes de dar la tarea por terminada, ejecuta las comprobaciones aplicables al al
 
 > Si una verificación falla por un error en tus cambios, corrígelo antes de responder. Si falla por un prerequisito del entorno local del integrante (ej. PostgreSQL apagado), repórtalo con el comando exacto para resolverlo.
 
-### Paso 7 — Actualizar `plan.md` y Entregar Handoff Claro
+### Paso 7 — Actualizar `plan.md`, Cerrar en Git/GitHub y Entregar Handoff
 1. Si todos los criterios de aceptación de la subfase se cumplieron y pasaron las verificaciones:
    - Cambia el estado de la subfase a `[x]` en `plan.md`.
    - Agrega una fila en la tabla **Registro de Avances / Handoffs** de `plan.md` indicando fecha, integrante, subfase, resumen breve y notas clave para subfases dependientes.
 2. Si la subfase quedó parcial, déjala en `[/]` e indica exactamente qué falta.
-3. Entrega un resumen conciso al integrante con:
+3. **Asistencia completa en Git y GitHub (obligatoria al cerrar):** No te limites a sugerir un mensaje de commit; acompaña o ejecuta el cierre completo:
+   - Verifica `git status` y `git diff --stat` confirmando que no existan secretos (`.env`) ni archivos temporales incluidos.
+   - Prepara y ejecuta (o solicita confirmación rápida antes de publicar si el integrante prefiere revisar primero):
+     1. `git add` de los archivos correspondientes y `git commit` en formato *Conventional Commits*.
+     2. `git push -u origin <rama>`.
+     3. Apertura del **Pull Request hacia `desarrollo`** (base: `desarrollo`, nunca directo a `main`) en `EduardoVal3/grammalab` usando el **MCP de GitHub** o `gh pr create` (con título, resumen de cambios y resultados de verificación).
+     4. Si el integrante solicita hacer merge a `desarrollo` y todo pasó las verificaciones, asiste con el merge del PR y la actualización local (`git checkout desarrollo` + `git pull origin desarrollo`). **Recordatorio:** la unión de `desarrollo` hacia `main` la realiza únicamente Eduardo.
+   - Si el entorno de ese integrante no tiene MCP de GitHub ni `gh` autenticado, entrega los **comandos exactos listos para copiar y pegar** (compatibles con su shell) y la URL del PR.
+4. Entrega un resumen conciso al integrante con:
    - **Cambios realizados** (archivos creados/editados).
    - **Resultados de verificación** (comandos ejecutados y resultado).
    - **Cómo probarlo localmente** (comandos exactos, contemplando Docker y Postgres local si aplica).
-   - **Mensaje de commit sugerido** (Conventional Commits) y recordatorio de abrir PR hacia `main` si la subfase terminó.
+   - **Estado en Git y GitHub** (rama, commit, enlace del PR o comandos listos si quedó pendiente su confirmación).
 
 ---
 
@@ -83,5 +91,5 @@ Antes de dar la tarea por terminada, ejecuta las comprobaciones aplicables al al
 2. Si se aprueba, actualiza primero `contexto-general.md` y `plan.md` antes de implementar código para que los demás agentes trabajen sobre la misma versión.
 
 ### D. Integración / Merge entre Subfases
-1. Al integrar código tras hacer `git pull origin main`, revisa `plan.md` (tabla de *Handoffs*) para detectar cambios recientes en contratos, migraciones Prisma (`npm run db:migrate`) o dependencias (`npm install`).
+1. Al integrar código tras hacer `git pull origin desarrollo`, revisa `plan.md` (tabla de *Handoffs*) para detectar cambios recientes en contratos, migraciones Prisma (`npm run db:migrate`) o dependencias (`npm install`).
 2. Resuelve conflictos preservando los contratos definidos en `contexto-general.md` y vuelve a correr `typecheck` + `test`.

@@ -56,7 +56,7 @@ flowchart TD
 ### FASE 1: Cimientos del Monorepo, Base de Datos y Contratos Base
 *Meta: Tener el monorepo listo para compilar, PostgreSQL 17 operativo (Docker o local), esquema Prisma migrado, tipos/parser base del motor formal, esqueleto del frontend y autenticación + datos semilla.*
 
-- [ ] **Subfase 1.1 — Inicialización del Monorepo, PostgreSQL 17 (Docker opcional) y NestJS + Prisma Base**
+- [x] **Subfase 1.1 — Inicialización del Monorepo, PostgreSQL 17 (Docker opcional) y NestJS + Prisma Base**
   - **Responsable:** Eduardo Valenzuela (`20231001440`)
   - **Depende de:** Ninguna
   - **Alcance / Carpeta principal:** `package.json` raíz, `.gitignore`, `docker-compose.yml`, `apps/api/prisma/schema.prisma`, `apps/api/src/{prisma,health,common,app.module.ts,main.ts}`, `apps/api/.env.example`.
@@ -244,3 +244,4 @@ flowchart TD
 | Fecha | Integrante | Subfase | Estado | Resumen de Cambios / Notas para Siguientes Subfases |
 | :--- | :--- | :--- | :---: | :--- |
 | 2026-11-24 | Eduardo Valenzuela / Setup | `0.0` | `[x]` | Se crearon los archivos base de contexto y orquestación para agentes (`AGENTS.md`, `contexto-general.md`, `plan.md`, `workflow.md`, `rules.md`, `.gitignore`) y se inicializó el repositorio Git/GitHub en `main`. Listo para iniciar Fase 1 en paralelo (`1.1`, `1.2`, `1.3`). |
+| 2026-11-24 | Eduardo Valenzuela | `1.1` | `[x]` | Monorepo `npm workspaces` (`packages/*`, `apps/*`) con scripts raíz, `docker-compose.yml` exclusivo de `postgres:17-alpine`, `apps/api` (NestJS 11 + TypeScript strict + `ValidationPipe` global + CORS por `CORS_ORIGIN` + `PrismaExceptionFilter`), `schema.prisma` completo con migración inicial `20261125033829_init` aplicada y `GET /api/health` verificado (`200 OK`, `db: "connected"`). **Notas de handoff:** `PrismaModule` es global (`PrismaService`), `package.json` de `@grammalab/api` ya configura `prisma.seed` apuntando a `prisma/seed.ts` para Subfase `1.4` (Angel), y los scripts raíz usan `--workspaces --if-present` para integrar automáticamente `packages/formal-engine` (`1.2`) y `apps/web` (`1.3`) al hacer merge. |

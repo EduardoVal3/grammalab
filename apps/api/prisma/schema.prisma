@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GrammarType {
+  REGULAR
+  CONTEXT_FREE
+}
+
+enum ExerciseMode {
+  MEMBERSHIP
+  CLASSIFICATION
+  CORRECTION
+}
+
+enum ExerciseDifficulty {
+  BASIC
+  INTERMEDIATE
+  CHALLENGE
+}
+
+enum AiInteractionType {
+  HINT_L1
+  HINT_L2
+  HINT_L3
+  EXPLAIN_ERROR
+  CHAT
+}
+
+enum AiProvider {
+  GEMINI
+  GROQ
+  FALLBACK_DETERMINISTIC
+}
+
+model User {
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String
+  email            String            @unique
+  passwordHash     String            @map("password_hash")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  grammars         Grammar[]
+  exerciseAttempts ExerciseAttempt[]
+  aiInteractions   AiInteraction[]
+
+  @@map("users")
+}
+
+model Grammar {
+  id             String      @id @default(uuid()) @db.Uuid
+  title          String
+  description    String?     @db.Text
+  type           GrammarType
+  definitionJson Json        @map("definition_json")
+  isTemplate     Boolean     @default(false) @map("is_template")
+  isPublic       Boolean     @default(false) @map("is_public")
+  ownerId        String?     @map("owner_id") @db.Uuid
+  owner          User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+  exercises      Exercise[]
+
+  @@index([ownerId])
+  @@index([type, isTemplate, isPublic])
+  @@map("grammars")
+}
+
+model Exercise {
+  id             String             @id @default(uuid()) @db.Uuid
+  grammarId      String             @map("grammar_id") @db.Uuid
+  grammar        Grammar            @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+  mode           ExerciseMode
+  difficulty     ExerciseDifficulty
+  prompt         String             @db.Text
+  payloadJson    Json               @map("payload_json")
+  expectedJson   Json               @map("expected_json")
+  isTemplate     Boolean            @default(false) @map("is_template")
+  createdAt      DateTime           @default(now()) @map("created_at")
+  attempts       ExerciseAttempt[]
+  aiInteractions AiInteraction[]
+
+  @@index([grammarId])
+  @@index([mode, difficulty])
+  @@map("exercises")
+}
+
+model ExerciseAttempt {
+  id                  String          @id @default(uuid()) @db.Uuid
+  exerciseId          String          @map("exercise_id") @db.Uuid
+  exercise            Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  userId              String?         @map("user_id") @db.Uuid
+  user                User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionKey          String?         @map("session_key")
+  submittedAnswerJson Json            @map("submitted_answer_json")
+  isCorrect           Boolean         @map("is_correct")
+  diagnosticJson      Json            @map("diagnostic_json")
+  hintsUsed           Int             @default(0) @map("hints_used")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  aiInteractions      AiInteraction[]
+
+  @@index([exerciseId])
+  @@index([userId, createdAt])
+  @@index([sessionKey, createdAt])
+  @@map("exercise_attempts")
+}
+
+model AiInteraction {
+  id                String            @id @default(uuid()) @db.Uuid
+  exerciseId        String?           @map("exercise_id") @db.Uuid
+  exercise          Exercise?         @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
+  attemptId         String?           @map("attempt_id") @db.Uuid
+  attempt           ExerciseAttempt?  @relation(fields: [attemptId], references: [id], onDelete: SetNull)
+  userId            String?           @map("user_id") @db.Uuid
+  user              User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionKey        String?           @map("session_key")
+  interactionType   AiInteractionType @map("interaction_type")
+  userMessage       String            @map("user_message") @db.Text
+  assistantResponse String            @map("assistant_response") @db.Text
+  provider          AiProvider
+  latencyMs         Int               @map("latency_ms")
+  createdAt         DateTime          @default(now()) @map("created_at")
+
+  @@index([exerciseId])
+  @@index([userId, createdAt])
+  @@index([sessionKey, createdAt])
+  @@map("ai_interactions")
+}

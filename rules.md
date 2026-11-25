@@ -89,9 +89,10 @@ Estas reglas son **obligatorias** para todos los agentes de IA y los 4 integrant
 
 ## 6. Reglas de Colaboración Git y Fronteras entre Integrantes
 
-1. **Ramas obligatorias:**
-   - Nunca trabajar ni hacer commit directo sobre `main`.
-   - Usar ramas por subfase: `feat/<subfase>-<slug>` (ej. `feat/2.1-motor-afd-pda`) o `fix/<slug>`.
+1. **Ramas obligatorias y flujo de integración (`feat/*` → `desarrollo` → `main`):**
+   - Nunca trabajar ni hacer commit directo sobre `main` ni sobre `desarrollo`.
+   - Toda rama de trabajo (`feat/<subfase>-<slug>` o `fix/<slug>`) nace desde `desarrollo` y **todos los Pull Requests se abren hacia `desarrollo`**.
+   - **Solo Eduardo Valenzuela realiza la unión (merge/PR) de `desarrollo` hacia `main`.** Ningún otro integrante ni agente debe abrir PRs de subfase directo contra `main` ni fusionar a `main` sin indicación explícita de Eduardo.
 2. **Respeto de propiedad por subfase:**
    - Cada integrante (y su agente) edita únicamente los archivos de su subfase asignada en `plan.md`.
    - Si necesita modificar un archivo compartido (`schema.prisma`, `packages/formal-engine/src/types`, `package.json` raíz o un contrato REST), debe avisarlo explícitamente al usuario y actualizar `contexto-general.md` en el mismo cambio.
@@ -99,3 +100,5 @@ Estas reglas son **obligatorias** para todos los agentes de IA y los 4 integrant
    - Usar formato *Conventional Commits* en español o inglés consistente: `feat(subfase-2.1): implementar simulador AFD y PDA`, `fix(api): corregir manejo de fallback Groq`, `docs(plan): actualizar estado de subfase 1.2`.
 4. **Sincronización del plan:**
    - Al iniciar o finalizar una subfase, actualizar obligatoriamente su casilla y el registro en `plan.md`.
+5. **Asistencia activa en Git y GitHub:**
+   - El agente debe asistir de principio a fin en Git y GitHub: crear/cambiar a la rama de subfase desde `desarrollo` al iniciar, revisar `git status` (sin `.env` ni basura), hacer `commit` y `push`, abrir el Pull Request hacia `desarrollo` (vía MCP de GitHub o `gh`) y ayudar a sincronizar `desarrollo` tras el merge, o entregar los comandos exactos listos para ejecutar cuando no haya autenticación activa. La integración `desarrollo` → `main` queda reservada exclusivamente para Eduardo.

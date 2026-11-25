@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables (nunca commitear secretos; mantener .env.example)
+.env
+.env.local
+.env.*.local
+apps/api/.env
+apps/web/.env
+
+# Build outputs
+dist/
+build/
+.vite/
+*.tsbuildinfo
+
+# Test & coverage
+coverage/
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo

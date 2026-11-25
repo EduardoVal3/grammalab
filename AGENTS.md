@@ -36,7 +36,7 @@ Identifica qué integrante está haciendo la solicitud para respetar su alcance 
 - **Motor determinista $\neq$ IA:** Toda validación de gramáticas, simulación AFD/PDA/CYK, evaluación de ejercicios y diagnóstico se ejecuta exclusivamente en `@grammalab/formal-engine`. **La IA solo asiste pedagógicamente** con contexto verificado por el motor.
 - **Docker solo para PostgreSQL 17 (y opcional):** `apps/web` y `apps/api` corren **siempre en el host local**, nunca en Docker. La conexión a PostgreSQL 17 debe funcionar tanto con `docker compose up -d` (`postgres:17-alpine`) como con PostgreSQL 17 instalado localmente mediante `DATABASE_URL`.
 - **Resiliencia IA 100 % gratuita:** Google AI Studio (Gemini Free) $\rightarrow$ Groq Cloud (Free) ante `429`/error $\rightarrow$ respuesta determinista si ambos fallan. Nunca exponer API keys en `apps/web`.
-- **Fronteras limpias:** No edites archivos pertenecientes a otra subfase activa sin autorización explícita. Trabaja en ramas `feat/<subfase>-<resumen>` y nunca directo en `main`.
+- **Fronteras limpias y flujo Git/GitHub asistido:** No edites archivos pertenecientes a otra subfase activa sin autorización explícita. Trabaja siempre en ramas `feat/<subfase>-<resumen>` creadas desde `desarrollo` con Pull Requests hacia `desarrollo` (nunca directo en `desarrollo` ni `main`; **solo Eduardo realiza la unión `desarrollo` → `main`**) y asiste activamente al integrante en todo el ciclo Git/GitHub (crear rama, commit, push, PR a `desarrollo` y sincronización tras merge).
 - **Cierre obligatorio:** Ninguna subfase se marca `[x]` en `plan.md` sin verificar compilación/tipos, pruebas relevantes y actualizar la tabla de *Registro de Avances / Handoffs*.
 
 ---

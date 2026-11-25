@@ -231,7 +231,7 @@ Prefijo global: `/api`. Todas las respuestas de error siguen el formato estánda
 | **Backend (`apps/api`)** | **Render (Web Service Free)** | 0 USD, sin tarjeta, 750 h/mes | Build desde raíz compilando `@grammalab/formal-engine` + `apps/api` (`prisma generate && nest build`); start: `node apps/api/dist/main.js`. Nota: entra en reposo tras 15 min de inactividad (~30–50 s de arranque frío), manejado en UI mediante `GET /api/health`. |
 | **Base de Datos (PostgreSQL 17)** | **Neon (Plan Free)** *(Alternativa: Supabase Free)* | 0 USD permanente, sin tarjeta, **PostgreSQL 17 nativo**, 1 GB almacenamiento (no vence a los 30 días) | `DATABASE_URL` con `?sslmode=require` configurada en Render. |
 | **Asistente de IA** | **Google AI Studio (Gemini API)** + **Groq Cloud API** | 0 USD, sin tarjeta | Variables `GEMINI_API_KEY` y `GROQ_API_KEY` configuradas exclusivamente en Render. |
-| **Repositorio y CI** | **GitHub (Plan Free)** | 0 USD | Ramas por subfase, Pull Requests y despliegues automáticos desde `main`. |
+| **Repositorio y CI** | **GitHub (Plan Free)** | 0 USD | Ramas `feat/*` con Pull Requests hacia `desarrollo`; Eduardo integra `desarrollo` → `main` para despliegues automáticos. |
 
 ---
 

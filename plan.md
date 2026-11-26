@@ -79,7 +79,7 @@ flowchart TD
     - Escribir batería inicial de tests unitarios en Vitest.
   - **Criterios de aceptación (DoD):** El paquete compila sin dependencias externas de UI/backend y todos los tests unitarios de parser, validación y clasificación pasan.
 
-- [ ] **Subfase 1.3 — Inicialización del Frontend (`apps/web`: React + Vite + Tailwind) y Layout Base**
+- [x] **Subfase 1.3 — Inicialización del Frontend (`apps/web`: React + Vite + Tailwind) y Layout Base**
   - **Responsable:** Jenifer Padilla (`20241900042`)
   - **Depende de:** Ninguna *(puede iniciar en paralelo a 1.1)*
   - **Alcance / Carpeta principal:** `apps/web/src/{api,context,components,pages,App.tsx,main.tsx}`, `apps/web/.env.example`.
@@ -245,3 +245,5 @@ flowchart TD
 | :--- | :--- | :--- | :---: | :--- |
 | 2026-11-24 | Eduardo Valenzuela / Setup | `0.0` | `[x]` | Se crearon los archivos base de contexto y orquestación para agentes (`AGENTS.md`, `contexto-general.md`, `plan.md`, `workflow.md`, `rules.md`, `.gitignore`) y se inicializó el repositorio Git/GitHub en `main`. Listo para iniciar Fase 1 en paralelo (`1.1`, `1.2`, `1.3`). |
 | 2026-11-24 | Eduardo Valenzuela | `1.1` | `[x]` | Monorepo `npm workspaces` (`packages/*`, `apps/*`) con scripts raíz, `docker-compose.yml` exclusivo de `postgres:17-alpine`, `apps/api` (NestJS 11 + TypeScript strict + `ValidationPipe` global + CORS por `CORS_ORIGIN` + `PrismaExceptionFilter`), `schema.prisma` completo con migración inicial `20261125033829_init` aplicada y `GET /api/health` verificado (`200 OK`, `db: "connected"`). **Notas de handoff:** `PrismaModule` es global (`PrismaService`), `package.json` de `@grammalab/api` ya configura `prisma.seed` apuntando a `prisma/seed.ts` para Subfase `1.4` (Angel), y los scripts raíz usan `--workspaces --if-present` para integrar automáticamente `packages/formal-engine` (`1.2`) y `apps/web` (`1.3`) al hacer merge. |
+
+| 2026-11-26 | Jenifer Padilla | `1.3` | `[x]` | Se inicializó `apps/web` con React, Vite, TypeScript, Tailwind CSS y React Router DOM. Se implementó el cliente HTTP tipado en `src/api/client.ts`, con soporte para JWT y detección de tiempos de espera. Se creó `SessionContext` para gestionar sesiones de invitados mediante `localStorage` y usuarios autenticados. Se desarrolló el layout responsive con navegación entre Inicio, Comparativa (pantalla provisional), Constructor, Simulador y Ejercicios, además del componente de estado de conexión de `/api/health`. **Verificación:** frontend ejecutado en `localhost:5173`, navegación comprobada y compilación de producción exitosa. **Notas de handoff:** queda pendiente confirmar con la integración backend el mecanismo de envío de `sessionKey` en las solicitudes HTTP. No se implementaron encabezados no definidos en el contrato ni funcionalidades de persistencia de ejercicios, correspondientes a subfases posteriores. |
